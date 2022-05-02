@@ -6,13 +6,18 @@ import (
 	"tracker/types"
 )
 
+var (
+	ErrCannotBeNil    = errors.New("keeper cannot be nil")
+	ErrInvalidMessage = errors.New("message is not valid")
+)
+
 type TransactionHandler struct {
 	keeper *keepers.TransactionKeeper
 }
 
 func NewTransactionHandler(k *keepers.TransactionKeeper) (*TransactionHandler, error) {
 	if k == nil {
-		return nil, errors.New("keeper cannot be nil")
+		return nil, ErrCannotBeNil
 	}
 
 	return &TransactionHandler{
@@ -53,7 +58,7 @@ func (th *TransactionHandler) Handler(message string, data interface{}) (interfa
 		}
 	default:
 		{
-			return nil, errors.New("message is not valid")
+			return nil, ErrInvalidMessage
 		}
 	}
 	return result, err

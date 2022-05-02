@@ -1,7 +1,9 @@
 package types
 
-var MESSAGE_TRANSACTION_KEEPER_GET_ALL_TRANSACTIONS string = "transactionKeeperGetAllTransactions"
-var MESSAGE_TRANSACTION_KEEPER_GET_TRANSACTION string = "transactionKeeperGetTransaction"
-var MESSAGE_TRANSACTION_KEEPER_ADD_TRANSACTION string = "transactionKeeperAddTransactions"
-var MESSAGE_TRANSACTION_KEEPER_UPDATE_TRANSACTION string = "transactionKeeperUpdateTransaction"
-var MESSAGE_TRANSACTION_KEEPER_REMOVE_TRANSACTION string = "transactionKeeperRemoveTransactions"
+const (
+	MESSAGE_TRANSACTION_KEEPER_GET_ALL_TRANSACTIONS string = "transactionKeeperGetAllTransactions"
+	MESSAGE_TRANSACTION_KEEPER_GET_TRANSACTION      string = "transactionKeeperGetTransaction"
+	MESSAGE_TRANSACTION_KEEPER_ADD_TRANSACTION      string = "transactionKeeperAddTransactions"
+	MESSAGE_TRANSACTION_KEEPER_UPDATE_TRANSACTION   string = "transactionKeeperUpdateTransaction"
+	MESSAGE_TRANSACTION_KEEPER_REMOVE_TRANSACTION   string = "transactionKeeperRemoveTransactions"
+)

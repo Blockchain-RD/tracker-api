@@ -6,6 +6,15 @@ import (
 	types "tracker/types"
 )
 
+var (
+	ErrPointerEmpty       = errors.New("pointer transaction is empty")
+	ErrInvalidId          = errors.New("invalid ID")
+	ErrSeekingId          = errors.New("error seeking value")
+	ErrIdIsUsed           = errors.New("id is used")
+	ErrStoreHaventCreated = errors.New("store haven't created")
+	ErrIdDoesntExists     = errors.New("ID doesn't exists")
+)
+
 type TransactionKeeper struct {
 	store map[string]*types.Transaction
 }
@@ -26,20 +35,20 @@ func NewTransactionKeeper() *TransactionKeeper {
 
 func (tk *TransactionKeeper) AddTransaction(transaction *types.Transaction) error {
 	if transaction == nil {
-		return errors.New("pointer transaction is empty")
+		return ErrPointerEmpty
 	}
 
 	if len(transaction.Id) <= 0 {
-		return errors.New("invalid ID")
+		return ErrInvalidId
 	}
 
 	val, err := tk.store[transaction.Id]
 	if err && val == nil {
-		return errors.New("error seeking value")
+		return ErrSeekingId
 	}
 
 	if val != nil {
-		return errors.New("id is used")
+		return ErrIdIsUsed
 	}
 
 	tk.store[transaction.Id] = transaction
@@ -48,7 +57,7 @@ func (tk *TransactionKeeper) AddTransaction(transaction *types.Transaction) erro
 
 func (tk *TransactionKeeper) GetAllTransaction() (map[string]*types.Transaction, error) {
 	if tk.store == nil {
-		return nil, errors.New("store haven't created")
+		return nil, ErrStoreHaventCreated
 	}
 	return tk.store, nil
 }
@@ -56,7 +65,7 @@ func (tk *TransactionKeeper) GetAllTransaction() (map[string]*types.Transaction,
 func (tk *TransactionKeeper) GetTransaction(id string) (*types.Transaction, error) {
 	result := tk.store[id]
 	if result == nil {
-		return nil, errors.New("ID doesn't exist")
+		return nil, ErrIdDoesntExists
 	}
 	return result, nil
 }
@@ -64,7 +73,7 @@ func (tk *TransactionKeeper) GetTransaction(id string) (*types.Transaction, erro
 func (tk *TransactionKeeper) DeleteTransaction(id string) error {
 	result := tk.store[id]
 	if result == nil {
-		return errors.New("ID doesn't exist")
+		return ErrIdDoesntExists
 	}
 
 	delete(tk.store, id)
@@ -74,7 +83,7 @@ func (tk *TransactionKeeper) DeleteTransaction(id string) error {
 func (tk *TransactionKeeper) UpdateTransaction(transaction *types.Transaction) error {
 	result := tk.store[transaction.Id]
 	if result == nil {
-		return errors.New("ID doesn't exist")
+		return ErrIdDoesntExists
 	}
 
 	tk.store[transaction.Id] = transaction
