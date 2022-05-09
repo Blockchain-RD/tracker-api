@@ -97,7 +97,7 @@ func TestTransactionHandlerUpdateTransaction(t *testing.T) {
 func TestTransactionHandlerWithInvalidMessage(t *testing.T) {
 	_, err := transactionHandler.Handler("this message not exist", nil)
 
-	if err == nil || err.Error() != "message is not valid" {
+	if err != handlers.ErrInvalidMessage {
 		t.Error("must throw an error, message is not valid")
 	}
 }

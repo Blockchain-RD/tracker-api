@@ -2,18 +2,22 @@ package keepers
 
 import (
 	"errors"
-	"time"
 	types "tracker/types"
+	"tracker/utils"
 )
 
 var (
-	ErrPointerEmpty       = errors.New("pointer transaction is empty")
-	ErrInvalidId          = errors.New("invalid ID")
-	ErrSeekingId          = errors.New("error seeking value")
-	ErrIdIsUsed           = errors.New("id is used")
-	ErrStoreHaventCreated = errors.New("store haven't created")
-	ErrIdDoesntExists     = errors.New("ID doesn't exists")
+	ErrPointerEmpty           = errors.New("pointer transaction is empty")
+	ErrInvalidId              = errors.New("invalid ID")
+	ErrSeekingId              = errors.New("error seeking value")
+	ErrIdIsUsed               = errors.New("id is used")
+	ErrStoreHaventCreated     = errors.New("store haven't created")
+	ErrIdDoesntExists         = errors.New("ID doesn't exists")
+	ErrReadingTransactionFile = errors.New("error reading transaction file")
+	ErrSavingTransactionFile  = errors.New("error reading transaction file")
 )
+
+const PATH_TRANSACTION_FILE string = "./data/transactions.json"
 
 type TransactionKeeper struct {
 	store map[string]*types.Transaction
@@ -23,11 +27,18 @@ func NewTransactionKeeper() *TransactionKeeper {
 	transactionKeeper := &TransactionKeeper{}
 	transactionKeeper.store = make(map[string]*types.Transaction)
 
-	transactionKeeper.store["asdasdasdqwdasdqw"] = &types.Transaction{
-		Id:    "asdasdasdqwdasdqw",
-		Date:  time.Now(),
-		Coin:  "osmosis",
-		Value: 100000,
+	store, err := utils.GetObjectFromJSONFile[map[string]*types.Transaction](PATH_TRANSACTION_FILE)
+	if err != nil {
+		panic(ErrReadingTransactionFile)
+	}
+
+	for _, v := range *store {
+		transactionKeeper.store[v.Id] = &types.Transaction{
+			Id:    v.Id,
+			Date:  v.Date,
+			Coin:  v.Coin,
+			Value: v.Value,
+		}
 	}
 
 	return transactionKeeper
@@ -52,6 +63,8 @@ func (tk *TransactionKeeper) AddTransaction(transaction *types.Transaction) erro
 	}
 
 	tk.store[transaction.Id] = transaction
+	tk.SaveFile()
+
 	return nil
 }
 
@@ -77,6 +90,8 @@ func (tk *TransactionKeeper) DeleteTransaction(id string) error {
 	}
 
 	delete(tk.store, id)
+	tk.SaveFile()
+
 	return nil
 }
 
@@ -87,5 +102,14 @@ func (tk *TransactionKeeper) UpdateTransaction(transaction *types.Transaction) e
 	}
 
 	tk.store[transaction.Id] = transaction
+	tk.SaveFile()
+
 	return nil
+}
+
+func (tk *TransactionKeeper) SaveFile() {
+	errStore := utils.SaveFile[map[string]*types.Transaction](PATH_TRANSACTION_FILE, tk.store)
+	if errStore != nil {
+		panic(ErrSavingTransactionFile)
+	}
 }
