@@ -1,14 +1,1 @@
-{
-    "qwgevjhvsabmvqwkjeh": {
-        "Id": "qwgevjhvsabmvqwkjeh",
-        "Date": "2022-05-02T20:23:15.723778176-04:00",
-        "Coin": "Band",
-        "Value": 55682
-    },
-    "kjhqwklejqhwekljqwhelkjqweh": {
-        "Id": "kjhqwklejqhwekljqwhelkjqweh",
-        "Date": "2022-05-02T20:23:15.723778176-04:00",
-        "Coin": "Osmosis",
-        "Value": 651657
-    }
-}
+{"andres":{"Id":"andres","Date":"2022-05-09T21:04:57.700624851-04:00","Coin":"fetchai","Value":900},"jkashdklajsdhakljsh":{"Id":"jkashdklajsdhakljsh","Date":"2022-05-09T20:45:49.088912683-04:00","Coin":"","Value":0},"kjhqwklejqhwekljqwhelkjqweh":{"Id":"kjhqwklejqhwekljqwhelkjqweh","Date":"2022-05-02T20:23:15.723778176-04:00","Coin":"Osmosis","Value":651657},"qwgevjhvsabmvqwkjeh":{"Id":"qwgevjhvsabmvqwkjeh","Date":"2022-05-02T20:23:15.723778176-04:00","Coin":"Band","Value":55682},"zcvxkjneklsrjh":{"Id":"zcvxkjneklsrjh","Date":"2022-05-09T20:51:41.677584412-04:00","Coin":"osmosis","Value":90}}

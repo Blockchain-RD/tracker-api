@@ -1,14 +1,22 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"tracker/keepers"
 	"tracker/types"
 )
 
 var (
-	ErrCannotBeNil    = errors.New("keeper cannot be nil")
-	ErrInvalidMessage = errors.New("message is not valid")
+	ErrCannotBeNil          = errors.New("keeper cannot be nil")
+	ErrInvalidMessage       = errors.New("message is not valid")
+	ErrMessageIsEmpty       = errors.New("message is empty")
+	ErrConvertingJsonToType = errors.New("error Convirtiendo")
+	ErrRequestingApi        = errors.New("error consultando")
+	ErrReadingBody          = errors.New("error leyendo")
 )
 
 type TransactionHandler struct {
@@ -62,4 +70,49 @@ func (th *TransactionHandler) Handler(message string, data interface{}) (interfa
 		}
 	}
 	return result, err
+}
+
+func (th *TransactionHandler) HandleFunc(rw http.ResponseWriter, r *http.Request) {
+	message := r.URL.Query().Get("message")
+	if message == "" {
+		log.Fatalln(ErrMessageIsEmpty)
+	}
+
+	defer r.Body.Close()
+	if r.Body == http.NoBody {
+		executeHandle(message, th, rw, nil)
+		return
+	}
+
+	s, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Fatalln(err, s)
+	}
+	var t interface{}
+
+	if s != nil {
+		err = json.Unmarshal(s, &t)
+		if err != nil {
+			log.Fatalln(err, s)
+		}
+	}
+	log.Print(t)
+	executeHandle(message, th, rw, t)
+}
+
+func executeHandle(message string, th *TransactionHandler, rw http.ResponseWriter, v interface{}) {
+	r, err := th.Handler(message, v)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	response, err := json.Marshal(r)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	rw.WriteHeader(200)
+	rw.Header().Add("content-type", "application/json")
+	rw.Write(response)
 }
