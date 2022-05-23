@@ -97,8 +97,8 @@ func (th *TransactionHandler) HandleFunc(rw http.ResponseWriter, r *http.Request
 			log.Fatalln(err, s)
 		}
 	}
-	log.Print(t)
-	executeHandle(message, th, rw, t)
+	nt := types.NewTransaction(t.(map[string]interface{}))
+	executeHandle(message, th, rw, nt)
 }
 
 func executeHandle(message string, th *TransactionHandler, rw http.ResponseWriter, v interface{}) {
