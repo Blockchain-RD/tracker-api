@@ -74,6 +74,7 @@ func (th *TransactionHandler) Handler(message string, data interface{}) (interfa
 
 func (th *TransactionHandler) HandleFunc(rw http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query().Get("message")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	if message == "" {
 		log.Fatalln(ErrMessageIsEmpty)
 	}
